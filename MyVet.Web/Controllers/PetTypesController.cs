@@ -2,17 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyVet.Web.Data;
 using MyVet.Web.Data.Entities;
 
 namespace MyVet.Web.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class PetTypesController : ControllerBase
+    public class PetTypesController : Controller
     {
         private readonly DataContext _context;
 
@@ -21,101 +19,130 @@ namespace MyVet.Web.Controllers
             _context = context;
         }
 
-        // GET: api/PetTypes
-        [HttpGet]
-        public IEnumerable<PetType> GetPetTypes()
+        // GET: PetTypes
+        public async Task<IActionResult> Index()
         {
-            return _context.PetTypes;
+            return View(await _context.PetTypes.ToListAsync());
         }
 
-        // GET: api/PetTypes/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetPetType([FromRoute] int id)
+        // GET: PetTypes/Details/5
+        public async Task<IActionResult> Details(int? id)
         {
-            if (!ModelState.IsValid)
+            if (id == null)
             {
-                return BadRequest(ModelState);
+                return NotFound();
             }
 
-            var petType = await _context.PetTypes.FindAsync(id);
-
+            var petType = await _context.PetTypes
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (petType == null)
             {
                 return NotFound();
             }
 
-            return Ok(petType);
+            return View(petType);
         }
 
-        // PUT: api/PetTypes/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPetType([FromRoute] int id, [FromBody] PetType petType)
+        // GET: PetTypes/Create
+        public IActionResult Create()
         {
-            if (!ModelState.IsValid)
+            return View();
+        }
+
+        // POST: PetTypes/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,Name")] PetType petType)
+        {
+            if (ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                _context.Add(petType);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(petType);
+        }
+
+        // GET: PetTypes/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
             }
 
+            var petType = await _context.PetTypes.FindAsync(id);
+            if (petType == null)
+            {
+                return NotFound();
+            }
+            return View(petType);
+        }
+
+        // POST: PetTypes/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] PetType petType)
+        {
             if (id != petType.Id)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(petType).State = EntityState.Modified;
-
-            try
+            if (ModelState.IsValid)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PetTypeExists(id))
+                try
                 {
-                    return NotFound();
+                    _context.Update(petType);
+                    await _context.SaveChangesAsync();
                 }
-                else
+                catch (DbUpdateConcurrencyException)
                 {
-                    throw;
+                    if (!PetTypeExists(petType.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
+                return RedirectToAction(nameof(Index));
             }
-
-            return NoContent();
+            return View(petType);
         }
 
-        // POST: api/PetTypes
-        [HttpPost]
-        public async Task<IActionResult> PostPetType([FromBody] PetType petType)
+        // GET: PetTypes/Delete/5
+        public async Task<IActionResult> Delete(int? id)
         {
-            if (!ModelState.IsValid)
+            if (id == null)
             {
-                return BadRequest(ModelState);
+                return NotFound();
             }
 
-            _context.PetTypes.Add(petType);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetPetType", new { id = petType.Id }, petType);
-        }
-
-        // DELETE: api/PetTypes/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePetType([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var petType = await _context.PetTypes.FindAsync(id);
+            var petType = await _context.PetTypes
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (petType == null)
             {
                 return NotFound();
             }
 
+            return View(petType);
+        }
+
+        // POST: PetTypes/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var petType = await _context.PetTypes.FindAsync(id);
             _context.PetTypes.Remove(petType);
             await _context.SaveChangesAsync();
-
-            return Ok(petType);
+            return RedirectToAction(nameof(Index));
         }
 
         private bool PetTypeExists(int id)
