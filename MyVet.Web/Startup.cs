@@ -46,6 +46,9 @@ namespace MyVet.Web
             {
                 cfg.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+            services.AddScoped<ICombosHelper, CombosHelper>();
+            services.AddScoped<IConverterHelper, ConverterHelper>();
+            services.AddScoped<IImageHelper, ImageHelper>();
 
             services.AddTransient<SeedDb>();
             services.AddScoped<IUserHelper, UserHelper>();

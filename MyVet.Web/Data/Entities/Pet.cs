@@ -20,6 +20,7 @@ namespace MyVet.Web.Data.Entities
         public string Race { get; set; }
 
         public Owner Owner { get; set; }
+        public ICollection<Agenda> Agendas { get; set; }
 
         public PetType PetType { get; set; }
 
