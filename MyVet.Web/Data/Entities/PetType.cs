@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyVet.Web.Data.Entities
 {
@@ -6,9 +7,11 @@ namespace MyVet.Web.Data.Entities
     {
         public int Id { get; set; }
 
-        [Display(Name = "Pet Type")]
-        [MaxLength(50, ErrorMessage = "The {0} field can not have more than {1} characters.")]
-        [Required(ErrorMessage = "The field {0} is mandatory.")]
+        [Display(Name = " Tipo de mascota ")]
+        [MaxLength(50, ErrorMessage = " El campo {0} no puede tener más de {1} caracteres ")]
+        [Required(ErrorMessage = " El campo {0} es obligatorio ")]
         public string Name { get; set; }
+        public ICollection<Pet> Pets { get; set; }
+
     }
 }

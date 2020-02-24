@@ -67,5 +67,21 @@ namespace MyVet.Web.Helpers
         {
             return await _userManager.IsInRoleAsync(user, roleName);
         }
+
+        public async Task<bool> DeleteUserAsync(string email)
+        {
+            var Delete = await GetUserByEmailAsync(email);
+            if (Delete == null)
+            {
+                return true;
+            }
+            var Respuesta = await _userManager.DeleteAsync(Delete);
+            return Respuesta.Succeeded;
+                    }
+        public async Task<IdentityResult> UpdateUserAsync(User user)
+        {
+            return await _userManager.UpdateAsync(user);
+        }
+
     }
 }

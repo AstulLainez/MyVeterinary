@@ -5,7 +5,6 @@ using System.Diagnostics;
 
 namespace MyVet.Web.Controllers
 {
-    [Authorize(Roles = "Admin")]
     public class HomeController : Controller
     {
         public IActionResult Index()

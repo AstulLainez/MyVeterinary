@@ -9,13 +9,13 @@ namespace MyVet.Web.Data.Entities
 
         public ServiceType ServiceType { get; set; }
 
-        [Display(Name = "Description*")]
-        [MaxLength(100, ErrorMessage = "The {0} field can not have more than {1} characters.")]
-        [Required(ErrorMessage = "The field {0} is mandatory.")]
+        [Display(Name = " Descripción ")]
+        [MaxLength(100, ErrorMessage = " El campo {0} no puede tener más de {1} caracteres ")]
+        [Required(ErrorMessage = " El campo {0} es obligatorio ")]
         public string Description { get; set; }
 
         [Display(Name = "Date*")]
-        [Required(ErrorMessage = "The field {0} is mandatory.")]
+        [Required(ErrorMessage = " El campo {0} es obligatorio ")]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; }
 
