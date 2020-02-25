@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MyVet.Common
+namespace ClassLibrary1
 {
     public class Class1
     {
